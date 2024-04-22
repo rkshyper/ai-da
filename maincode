@@ -1,0 +1,55 @@
+import java.util.Scanner;
+
+public class CricketRunsPrediction {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input training data
+        System.out.println("Enter the number of matches for training:");
+        int numMatches = scanner.nextInt();
+
+        double[] runs = new double[numMatches];
+        double[] wickets = new double[numMatches];
+
+        System.out.println("Enter runs scored and wickets taken for each match:");
+        for (int i = 0; i < numMatches; i++) {
+            System.out.println("Match " + (i + 1) + ":");
+            System.out.print("Runs scored: ");
+            runs[i] = scanner.nextDouble();
+            System.out.print("Wickets taken: ");
+            wickets[i] = scanner.nextDouble();
+        }
+
+        // Perform linear regression
+        double sumRuns = 0;
+        double sumWickets = 0;
+        double sumRunsSquared = 0;
+        double sumRunsWickets = 0;
+
+        for (int i = 0; i < numMatches; i++) {
+            sumRuns += runs[i];
+            sumWickets += wickets[i];
+            sumRunsSquared += runs[i] * runs[i];
+            sumRunsWickets += runs[i] * wickets[i];
+        }
+
+        double meanRuns = sumRuns / numMatches;
+        double meanWickets = sumWickets / numMatches;
+
+        double slope = (numMatches * sumRunsWickets - sumRuns * sumWickets) /
+                       (numMatches * sumRunsSquared - sumRuns * sumRuns);
+        double intercept = meanRuns - slope * meanWickets;
+
+        // Predict runs scored for a new match
+        System.out.println("\nEnter runs scored and wickets taken for the new match:");
+        System.out.print("Runs scored: ");
+        double newRuns = scanner.nextDouble();
+        System.out.print("Wickets taken: ");
+        double newWickets = scanner.nextDouble();
+
+        double predictedRuns = slope * newWickets + intercept;
+        System.out.println("Predicted runs for the new match: " + predictedRuns);
+
+        scanner.close();
+    }
+}
